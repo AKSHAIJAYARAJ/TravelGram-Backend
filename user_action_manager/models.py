@@ -13,5 +13,25 @@ class UserModel(models.Model):
     user_login_status = models.BooleanField(default=False)
     user_is_active = models.BooleanField(default=True)
 
+# class UserGraphModel(models.Model):
+
+#     first_name = models.CharField(max_length=200,null=True,blank=True,db_column='User.first_name')
+#     last_name = models.CharField(max_length=200,null=True,blank=True,db_column='User.last_name')
+#     gender = models.CharField(max_length=10,null=True,blank=True,db_column='User.gender')
+#     nick_name = models.CharField(max_length=200,null=True,blank=True,db_column='User.nick_name')
+#     user_id = models.IntegerField(db_column='User.id')
+
+# class LocationGraphModel(models.Model):
+
+#     location_name = models.CharField(max_length=200,null=True,blank=True,db_column='Location.name')
+#     longitude = models.FloatField(null=True,blank=True,db_column='Location.longitude')
+#     latitude = models.FloatField(null=True,blank=True,db_column='Location.latitude')
+#     discription = models.CharField(max_length=20000,null=True,blank=True,db_column='Location.discription')
+#     user = models.ForeignKey('UserGraphModel', on_delete=models.CASCADE, null=True, blank=True,db_column='Location.user')
+
+# class LocationGraphConnectionModel(models.Model):
+#     # Relation to get user who added a perticular location
+#     from_location = models.ForeignKey(LocationGraphModel, related_name='edge', on_delete=models.CASCADE)
+#     to_user = models.ForeignKey(LocationGraphModel, related_name='reverse_edge', on_delete=models.CASCADE)
  
     
