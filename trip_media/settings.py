@@ -90,9 +90,19 @@ DATABASES = {
 
         'PORT': '5432',
 
+    },
+    'dgraph': {
+        'ENGINE': 'djangograph',
+        'NAME': 'localhost:9080',
     }
 
 }
+
+# DATABASES = {
+    
+# }
+
+# DATABASE_ROUTERS = ['djangograph.routers.DgraphRouter']
 
 # CACHES = {
 #     "default": {
