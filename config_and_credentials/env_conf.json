@@ -11,5 +11,11 @@
         "password" : "",
         "host": "localhost",
         "port" : "5432"
+    },
+    "dgraph":{
+        "user-name": "dgraph",
+        "password" : "",
+        "host": "localhost:8080",
+        "port" : ""
     }
 }
