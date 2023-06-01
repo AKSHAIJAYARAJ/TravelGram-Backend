@@ -45,18 +45,24 @@ class DgraphManager:
         """
         txn = self.client.txn()
         try:
+
             mutation = pydgraph.Mutation()
             txn.mutate(set_obj=data,mutation=mutation)
             response = txn.mutate(mutation)
             uid = response.uids
             txn.commit()
-
             uid = list(uid.values())[0]
-            # print(f"Created node with UID: {uid}")
             return uid
-        finally:
-            txn.discard()
+        
+        except Exception as e:
+
+            print(e)
             return False
+        
+        finally:
+
+            txn.discard()
+            
 
     def update_node(self, data : dict, uid :str):
         """
@@ -71,22 +77,26 @@ class DgraphManager:
         """
         txn = self.client.txn()
         try:
+
             data.update({"uid":uid})
             mutation = pydgraph.Mutation()
             txn.mutate(set_obj=data,mutation=mutation)
-            response = txn.mutate(mutation)
+            txn.mutate(mutation)
             txn.commit()
+            return True
+        
         finally:
+
             txn.discard()
             return False
 
-    def delete_node(self, uid):
+    def delete_node(self, uid : str,schema : str):
         """
         This method is used for deleting nodes.
         Algorithm:
 
-        1) Get data to be stored and uid of the node to be updated.
-        2) Set uid in data.
+        1) Get schema and uid of the node to be deleted.
+        2) Get delete query.
         2) Mutate the input data to update the node.
         3) Return uid if data successfully else return false
 
@@ -94,29 +104,36 @@ class DgraphManager:
 
         txn = self.client.txn()
         try:
+
             node_uid = uid
-            query= '''
-            {
-            deleteNode(input: {{ uid: '{node_uid}' }}) {
-                numUids
-            }
-            }
-            '''
-                        
+            query = """{all(func: uid("""+uid+"""))"""+str(schema)+"""}"""
             print(query)
-            txn.query(query)
-            # mutation = pydgraph.Mutation()
-            # txn.mutate(del_obj=query)
+            res = self.client.txn(read_only=True).query(query)
+            data = json.loads(res.json)
+            mutation = pydgraph.Mutation()
+            txn.mutate(del_obj=data["all"][0],mutation=mutation)
             txn.commit()
+            return True
+        
         except Exception as e:
+
             print(e)
+            return False
 
         finally :
             txn.discard()
-            return False
+            
 
     def get_node(self, query:str):
-       
+        """
+        This method is used for fetching nodes.
+        Steps:
+
+        1) Get query
+        2) Get data based on query
+        3) Return data
+        
+        """
         response = self.client.txn(read_only=True).query(query)
         data = response.json
 
@@ -124,6 +141,26 @@ class DgraphManager:
     
     def __del__(self):
         self.client_stub.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#################################################### SAMPLE DATA ####################################################
 
 # id = DgraphManager().update_node(data = {
 #     'uid':'0x1',
@@ -150,4 +187,26 @@ class DgraphManager:
 # }
 # }""")
 # print(data)
-# DgraphManager().delete_node(uid="0x2")
+
+# DgraphManager().delete_node(uid="0xc", schema="""{
+#     uid
+#     Test.name
+#     Test.age
+#     dgraph.type
+#     }""")
+
+# id = DgraphManager().create_node(data={
+# "Test.name" :"Akshai",
+# "Test.age" : 100
+# })
+# print(id)
+
+# SAMPLE DELETE QUERY
+# query = """{all(func: uid("""+uid+"""))
+#     {
+#     uid
+#     Test.name
+#     Test.age
+#     dgraph.type
+#     }}
+# """

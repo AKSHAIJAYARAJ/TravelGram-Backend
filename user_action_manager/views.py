@@ -2,7 +2,7 @@
 # __________________________________________________________________________________________________________________________
 # MODULE NAME   : User Action Manager Views
 # VERSION       : 1.0
-# SYNOPSYS      : This module is handls views for user_action_manager.
+# SYNOPSYS      : This module is handles views for user_action_manager.
 # AUTHOR        : AKSHAI JAYARAJ
 # CREATED ON    : 2023-MAY-28
 # METHODS       : 
