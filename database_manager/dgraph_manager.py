@@ -33,7 +33,7 @@ class DgraphManager:
         self.client_stub = pydgraph.DgraphClientStub('localhost:9080')
         self.client = pydgraph.DgraphClient(self.client_stub)
 
-    def create_node(self, data):
+    def create_node(self, data : dict):
         """
         This method is used for creating nodes.
         Algorithm:

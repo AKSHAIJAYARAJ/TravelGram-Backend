@@ -20,6 +20,7 @@ class User:
         validator = self.user_serializer(data=data)
         if validator.is_valid():
             try :
+                # Username validation using regx
                 if 'user_phone_number' in data.keys():
                     if re.match(r'(\+[0-9]+\s*)?(\([0-9]+\))?[\s0-9\-]+[0-9]+', data['user_phone_number']):
                         username = data['user_phone_number']
@@ -27,18 +28,26 @@ class User:
                     if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', data['user_email']):
                         username = data['user_email']
                 if not username:
-                    return {"status":"error","result":"",'message':'Invalid Phone numner or Email id'}
-                existing_users = RedisManager().get(key= 'registerd-users')
+                    return {"status":"error","result":"",'message':'Invalid Phone number or Email id'}
+                # Check whether the user is already registered or not
+                existing_users = RedisManager().get(key= 'registered-users')
                 if not existing_users:
-                    RedisManager().upsert(value=[username],key='registerd-users')
+                    # Add user to registered users if user is not registered
+                    RedisManager().upsert(value=[username],key='registered-users')
                 elif existing_users and username not in existing_users:
-                    RedisManager().append(value=[username],key='registerd-users')
+                    RedisManager().append(value=[username],key='registered-users')
                 else:
                     return {"status":"error","result":"",'message':'Username already exists'}
+                # Hash the user password
                 salt = bcrypt.gensalt()
                 hashed_password = bcrypt.hashpw(data['user_pass_word'].encode('utf-8'), salt)
                 validator.validated_data['user_pass_word'] = hashed_password
+                dgraph_payload = validator.validated_data
+                # Save data to database 
                 validator.save()
+                
+
+                
                 return {"status":"ok","result":"",'message':'User Created'}
             except Exception as e:
                 print('-----USER EPTN-----',e)
@@ -51,9 +60,9 @@ class User:
         if validator.is_valid():
             try:
                 username = data['user_phone_number'] if 'user_phone_number' in data.keys() else data['user_email']
-                existing_users = RedisManager().get(key= 'registerd-users')
+                existing_users = RedisManager().get(key= 'registered-users')
                 if username in existing_users:
-                    RedisManager().append(value=[username],key='registerd-users')
+                    RedisManager().append(value=[username],key='registered-users')
                 else:
                     return {"status":"error","result":"",'message':'Username already exists'}
                 

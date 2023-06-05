@@ -1,0 +1,14 @@
+{
+    "user":{
+        "predicates":[
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "gender",
+            "email",
+            "phone"
+        ],
+        "connections" :["location"],
+        "dgraph.type" :"User"
+    }
+}

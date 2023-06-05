@@ -62,12 +62,12 @@ class RedisManager:
 
                 current_data.update(value)
             else:
-                raise TypeError("Cannont concat diffrent data types")
+                raise TypeError("Cannot concat different data types")
             self.upsert(value=current_data,key=key)
             return True
         except:
            return False 
 
-# data = RedisManager().get(key='registerd-users')
+# data = RedisManager().get(key='registered-users')
 # print(data)
-# RedisManager().delete(key='registerd-users')
+# RedisManager().delete(key='registered-users')
