@@ -1,3 +1,21 @@
+# __________________________________________________________________________________________________________________________
+# MODULE NAME   : Dynamic Dgraph Query Generator
+# VERSION       : 1.0
+# SYNOPSYS      : This module is developed to generate postgres queries dynamically
+# AUTHOR        : AKSHAI JAYARAJ
+# CREATED ON    : 2023-JUNE-05
+# METHODS       : - generate_get_query    : - Input args : schema_owner, filter, normalize,recurse,depth, uid,connected_node,reverse_edge
+#                            - Output     : Returns fetch query based on input arguments
+#                 - generate_upsert_query : - Input args : schema_owner,input_payload,uid
+#                            - Output     : Returns insert query based on input arguments
+#              
+# ENHANCEMENT HISTORY
+# __________________________________________________________________________________________________________________________
+# AUTHOR        : <AUTHOR>
+# CREATED ON    : <CREATED ON>
+# METHODS       : <METHODS>
+# __________________________________________________________________________________________________________________________
+
 import json
 import sys
 sys.path.append("/opt/projects-A/trip_media/")
@@ -42,6 +60,7 @@ class DgraphQueryGenerator:
         predicate_str += "}}"
         query = part_1 + predicate_str
         print(query)
+        return query
     def generate_upsert_query(self,schema_owner : str = None,input_payload:dict =None,uid : str = None):
         
         # Get schema based on schema owner

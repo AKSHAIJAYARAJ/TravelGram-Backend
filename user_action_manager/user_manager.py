@@ -24,11 +24,15 @@ class User:
                 if 'user_phone_number' in data.keys():
                     if re.match(r'(\+[0-9]+\s*)?(\([0-9]+\))?[\s0-9\-]+[0-9]+', data['user_phone_number']):
                         username = data['user_phone_number']
+                        dgraph_payload = {"phone":username}
                 elif 'user_email' in data.keys():
                     if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', data['user_email']):
                         username = data['user_email']
+                        dgraph_payload = {"email":username}
+
                 if not username:
                     return {"status":"error","result":"",'message':'Invalid Phone number or Email id'}
+                
                 # Check whether the user is already registered or not
                 existing_users = RedisManager().get(key= 'registered-users')
                 if not existing_users:
@@ -38,16 +42,15 @@ class User:
                     RedisManager().append(value=[username],key='registered-users')
                 else:
                     return {"status":"error","result":"",'message':'Username already exists'}
+                
                 # Hash the user password
                 salt = bcrypt.gensalt()
                 hashed_password = bcrypt.hashpw(data['user_pass_word'].encode('utf-8'), salt)
                 validator.validated_data['user_pass_word'] = hashed_password
-                dgraph_payload = validator.validated_data
+                
                 # Save data to database 
                 validator.save()
-                
 
-                
                 return {"status":"ok","result":"",'message':'User Created'}
             except Exception as e:
                 print('-----USER EPTN-----',e)
