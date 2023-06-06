@@ -17,5 +17,6 @@
         "password" : "",
         "host": "localhost:8080",
         "port" : ""
-    }
+    },
+    "jwt_secret_key":"daslfijqpjasdcn42359f0upgj"
 }

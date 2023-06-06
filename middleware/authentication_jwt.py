@@ -1,5 +1,3 @@
-# jwt_authentication.py
-
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
 from django.conf import settings

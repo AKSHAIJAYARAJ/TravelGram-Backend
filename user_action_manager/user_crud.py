@@ -14,8 +14,8 @@ class UserCRUD:
             query = DgraphQueryGenerator().generate_get_query(schema_owner="user",uid=user_uid)
         else:
             # Fetch all
-            query = DgraphQueryGenerator().generate_get_query(schema_owner="user") 
-        data = DgraphManager().get_node(query=query)
+            query = DgraphQueryGenerator().generate_get_query(schema_owner="user")
+        data = DgraphManager().get_node(query=query)['query']
         return data
     
     def post(self,user_data : dict):
