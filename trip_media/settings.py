@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-=es4o_=((ofryey_f#o2ijr9h546oe)b)b+3y#7wh8^uo_23s2'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -49,7 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.authentication_jwt.JWTAuthentication',
+    # 'middleware.authentication_jwt.JWTAuthentication',
+    'middleware.authentication_middleware.JwtAuthentication'
 ]
 
 
@@ -86,16 +88,12 @@ DATABASES = {
 
         'USER': 'postgres',
 
-        'PASSWORD': 'postgres',
+        'PASSWORD': 'your_password',
 
-        'HOST': 'localhost',
+        'HOST': 'host.docker.internal',
 
         'PORT': '5432',
 
-    },
-    'dgraph': {
-        'ENGINE': 'djangograph',
-        'NAME': 'localhost:9080',
     }
 
 }
@@ -159,3 +157,15 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Authentication parameters are defined here
+
+# Token validity in days
+TOKEN_EXPIRY = 10
+
+# Unauthenticated requests are defined here
+UNAUTH_REQUESTS = ['/user/signin/signout','/user/register/']
+
+
+
+

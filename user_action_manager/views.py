@@ -25,16 +25,21 @@ from .user_manager import User
 
 class SignInUpViewSet(APIView):
 
-    def get(self,request):
-        pass
     def post(self,request):
         try:
+            print("_______IMSIDE VIEW LOGIN___________")
             response = User().log_in(data = request.data)
+            return Response(data={"status":response["status"],"result":response["result"],'message':response["message"]},status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(data={"status":"error","result":response,'message':'error'},status=status.HTTP_400_BAD_REQUEST)
+    def put(self,request):
+        try:
+            response = User().log_out(token = request.headers.get("access"))
             return Response(data={"status":response["status"],"result":response["result"],'message':response["message"]},status=status.HTTP_200_OK)
         except:
             return Response(data={"status":"error","result":response,'message':'error'},status=status.HTTP_400_BAD_REQUEST)
-    def put(self,request):
-        pass
+        
     def delete(self,request):
         pass
 
