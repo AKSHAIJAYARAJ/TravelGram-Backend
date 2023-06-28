@@ -124,6 +124,7 @@ class User:
                         # Generate and return token
                         token = jwt.encode(payload,key =settings.SECRET_KEY,algorithm='HS256')
                         #TODO store token in redis
+                        print("------",token)
                         return {"status":"Ok","result":{'token':token},'message':'Success'}
                 else:
                     return {"status":"error","result":"",'message':'user not found'}

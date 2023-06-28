@@ -10,5 +10,23 @@
         ],
         "connections" :["location"],
         "dgraph.type" :"User"
+    },
+    "location":{
+        "predicates":[
+            "name",
+            "description",
+            "latitude",
+            "longitude",
+            "hash_tags",
+            "user",
+            "created_on",
+            "rated_person_id",
+            "overall_rating ",
+            "location",
+            "likes",
+            "shares"
+        ],
+        "connections" :["location","user"],
+        "dgraph.type" :"Location"
     }
 }

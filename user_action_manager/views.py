@@ -27,7 +27,7 @@ class SignInUpViewSet(APIView):
 
     def post(self,request):
         try:
-            print("_______IMSIDE VIEW LOGIN___________")
+            print("_______INSIDE VIEW LOGIN___________")
             response = User().log_in(data = request.data)
             return Response(data={"status":response["status"],"result":response["result"],'message':response["message"]},status=status.HTTP_200_OK)
         except Exception as e:

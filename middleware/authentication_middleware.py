@@ -16,12 +16,14 @@
 
 from typing import Any
 from django.conf import settings
-import jwt
+# import jwt
+from jwt.api_jws import decode
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 from datetime import datetime
 from database_manager.redis_executer import RedisManager
+import json
 
 class JwtAuthentication:
     def __init__(self, get_response):
@@ -33,9 +35,9 @@ class JwtAuthentication:
             # Bypass paths which do not require authentication
             if request.path_info in settings.UNAUTH_REQUESTS:
                 return self.get_response(request)
-
+            print('---------FIRST------------')
             # Rest of the code remains unchanged
-            token = request.headers.get('Authorization')
+            token = request.headers.get('Authorization').split(' ')
             if self.blacklisted_token(token=token):
                 response = Response(data={"status": "error", "result": "Login required", "message": "Token expired"}, status=status.HTTP_403_FORBIDDEN)
                 response.accepted_renderer = JSONRenderer()
@@ -43,8 +45,9 @@ class JwtAuthentication:
                 response.renderer_context = {}
                 response.render()
                 return response
-
-            decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            
+            decoded_token = json.loads(decode(token[1], settings.SECRET_KEY, algorithms=['HS256']))
+            print('---------decoded_token------------',decoded_token)
             if not decoded_token:
                 response = Response(data={"status": "Error", "result": "Login required", "message": "Unauthenticated user"}, status=status.HTTP_403_FORBIDDEN)
                 response.accepted_renderer = JSONRenderer()
@@ -52,11 +55,12 @@ class JwtAuthentication:
                 response.renderer_context = {}
                 response.render()
                 return response
-
+            print('---------Third------------')
             token_expiry = decoded_token["expiry"]
             now = datetime.now()
-            duration = now - token_expiry
-            days = duration.day
+            duration = now - datetime.strptime(token_expiry, '%Y-%m-%d %H:%M:%S.%f')
+            days = duration.days
+            print(days)
             if days > settings.TOKEN_EXPIRY:
                 response = Response(data={"status": "error", "result": "Login required", "message": "Token expired"}, status=status.HTTP_403_FORBIDDEN)
                 response.accepted_renderer = JSONRenderer()
@@ -82,8 +86,8 @@ class JwtAuthentication:
         try:
             blacklisted = RedisManager().get(key="black-listed-tokens")
             if token in blacklisted['access']:
-                return True
+                return 
             else: 
                 return False
         except:
-            return True
+            return 
